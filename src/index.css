@@ -28,6 +28,11 @@ body {
   border-top-left-radius: 9999px;
   border-color: #372652;
 }
+.input-left-div{
+  border-bottom-left-radius: 9999px;
+  border-top-left-radius: 9999px;
+  border-color: #372652;
+}
 .left-div:hover{
   border: none;
   cursor: pointer;
@@ -36,12 +41,12 @@ body {
   border-bottom-right-radius: 9999px;
   border-top-right-radius: 9999px;
 }
-/* .banner-wrap {
-  background-image: url("./assets/night.jpg");
+.input-wrapper {
+  background-image: url("./assets/night_2.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   
-} */
+}
 .cardBackground{
   background-image: url("./assets/pattern.png");
   background-size: cover;
