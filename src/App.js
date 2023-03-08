@@ -16,6 +16,7 @@ const App = () => {
       </div>
 
       <InputField />
+      {/* <Capsules /> */}
     </div>
   );
 };

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import ReactPaginate from "react-paginate";
+import CapsuleDetails from "./CapsuleDetails";
 
 const Capsules = () => {
   const [capsules, setCapsules] = useState([]);
@@ -7,6 +9,10 @@ const Capsules = () => {
   const [statusFilter, setStatusFilter] = useState("");
   const [launchFilter, setLaunchFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
+  const [pageNumber, setPageNumber] = useState(0);
+  const [selectedCapsule, setSelectedCapsule] = useState(null); // state to hold selected capsule
+  const [modalShown, setModalShown] = useState(false);
+  const capsulesPerPage = 10;
 
   useEffect(() => {
     const fetchCapsules = async () => {
@@ -35,6 +41,12 @@ const Capsules = () => {
     setTypeFilter(event.target.value);
   };
 
+  const handleCapsuleClick = (capsule) => {
+    setSelectedCapsule(capsule);
+    setModalShown(true);
+    // set the selected capsule in state
+  };
+
   const filteredCapsules = capsules.filter((capsule) => {
     const matchesSearch = capsule.capsule_serial
       .toLowerCase()
@@ -57,13 +69,44 @@ const Capsules = () => {
     );
   });
 
+  const pageCount = Math.ceil(filteredCapsules.length / capsulesPerPage);
+
+  const displayCapsules = filteredCapsules
+    .slice(pageNumber * capsulesPerPage, (pageNumber + 1) * capsulesPerPage)
+    .map((capsule) => (
+      <li key={capsule.capsule_serial}>
+        <h2>{capsule.capsule_serial}</h2>
+        <p>Status: {capsule.status}</p>
+        <p>Original launch: {capsule.original_launch}</p>
+        <p>Type: {capsule.type}</p>
+        <button
+          className="p-2 bg-blue-500 rounded-lg text-white"
+          onClick={() => handleCapsuleClick(capsule)}
+        >
+          click me
+        </button>
+      </li>
+    ));
+
+  const handlePageClick = ({ selected }) => {
+    setPageNumber(selected);
+  };
+
   return (
     <div>
+      {modalShown && selectedCapsule && (
+        <div>
+          <CapsuleDetails
+            capsule={selectedCapsule}
+            onClose={() => setModalShown(false)}
+            onCapsuleClick={handleCapsuleClick}
+          />
+        </div>
+      )}{" "}
       <div>
         <label htmlFor="search">Search capsules:</label>
         <input id="search" type="text" value={search} onChange={handleSearch} />
       </div>
-
       <div>
         <label htmlFor="status">Filter by status:</label>
         <select id="status" value={statusFilter} onChange={handleStatusFilter}>
@@ -72,7 +115,6 @@ const Capsules = () => {
           <option value="retired">Retired</option>
         </select>
       </div>
-
       <div>
         <label htmlFor="launch">Filter by original launch:</label>
         <select id="launch" value={launchFilter} onChange={handleLaunchFilter}>
@@ -87,7 +129,6 @@ const Capsules = () => {
           ))}
         </select>
       </div>
-
       <div>
         <label htmlFor="type">Filter by type:</label>
         <select id="type" value={typeFilter} onChange={handleTypeFilter}>
@@ -99,17 +140,24 @@ const Capsules = () => {
           ))}
         </select>
       </div>
-
-      <ul className="text-white">
-        {filteredCapsules.map((capsule) => (
-          <li key={capsule.capsule_serial}>
-            <h2>{capsule.capsule_serial}</h2>
-            <p>Status: {capsule.status}</p>
-            <p>Original launch: {capsule.original_launch}</p>
-            <p>Type: {capsule.type}</p>
-          </li>
-        ))}
-      </ul>
+      <div className="">
+        <ul className="text-white flex mx-auto flex-wrap gap-6 justify-center">
+          {displayCapsules}
+        </ul>
+      </div>
+      <ReactPaginate
+        pageCount={pageCount}
+        pageRangeDisplayed={2}
+        onPageChange={handlePageClick}
+        marginPagesDisplayed={2}
+        containerClassName={"container"}
+        previousLinkClassName={"page"}
+        breakClassName={"page"}
+        nextLinkClassName={"page"}
+        pageClassName={"page"}
+        disabledClassNae={"disabled"}
+        activeClassName={"active"}
+      />
     </div>
   );
 };

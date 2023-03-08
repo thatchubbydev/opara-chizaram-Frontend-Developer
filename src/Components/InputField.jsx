@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { AiOutlineSearch } from "react-icons/ai";
 import CardContainer from "./CardContainer";
+import card from "../assets/logo_2.png";
+import logo from "../assets/spacex_logo.png";
+import { BsArrowRight } from "react-icons/bs";
+import { BiCaretRight } from "react-icons/bi";
+import ReactPaginate from "react-paginate";
 import Capsules from "./Capsules";
+import CapsuleDetails from "./CapsuleDetails";
 
 const InputField = () => {
   const [capsules, setCapsules] = useState([]);
@@ -10,6 +16,10 @@ const InputField = () => {
   const [statusFilter, setStatusFilter] = useState("");
   const [launchFilter, setLaunchFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
+  const [pageNumber, setPageNumber] = useState(0);
+  const [selectedCapsule, setSelectedCapsule] = useState(null); // state to hold selected capsule
+  const [modalShown, setModalShown] = useState(false);
+  const capsulesPerPage = 10;
 
   useEffect(() => {
     const fetchCapsules = async () => {
@@ -38,6 +48,12 @@ const InputField = () => {
     setTypeFilter(event.target.value);
   };
 
+  const handleCapsuleClick = (capsule) => {
+    setSelectedCapsule(capsule);
+    setModalShown(true);
+    // set the selected capsule in state
+  };
+
   const filteredCapsules = capsules.filter((capsule) => {
     const matchesSearch = capsule.capsule_serial
       .toLowerCase()
@@ -60,8 +76,67 @@ const InputField = () => {
     );
   });
 
+  const pageCount = Math.ceil(filteredCapsules.length / capsulesPerPage);
+
+  const displayCapsules = filteredCapsules
+    .slice(pageNumber * capsulesPerPage, (pageNumber + 1) * capsulesPerPage)
+    .map((item) => (
+      <div
+        key={capsules?.capsule_id}
+        className="glass p-6 px-8 mt-12 space-y-4 rounded-[0.7rem] w-fit text-left drop-shadow-2xl border bg-[#2c124f] "
+      >
+        <div className="flex -mt-12 -ml-4">
+          <img src={card} alt="card header" width={50} />
+        </div>
+
+        <p className="text-2xl font-medium">
+          {/* <span className="text-blue-500 font-bold">Serial:</span>{" "} */}
+          {item?.capsule_serial}
+        </p>
+        <div className="border-b w-[20%]"></div>
+
+        <p className="text-sm">
+          Under the category{" "}
+          <span className="text-blue-500 font-bold">{item?.capsule_id}</span>{" "}
+        </p>
+        <p className="text-sm">
+          Having a status of
+          <span className="text-blue-500 font-bold"> {item?.status}</span>{" "}
+        </p>
+        <div
+          className="justify-center text-white  flex"
+          onClick={() => handleCapsuleClick(item)}
+        >
+          {/* left div */}
+          <div className="hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-[#d0cdcc] justify-between text-sm border left-div px-6 py-2 my-4 flex w-fit ">
+            {" "}
+            <div>Explore</div>
+          </div>
+          {/* right div */}
+          <div className=" bg-purple-500 justify-between text-sm border right-div px-2 pt-3 py-2 my-4 flex w-fit ">
+            {" "}
+            <div>
+              <BiCaretRight />
+            </div>
+          </div>
+        </div>
+      </div>
+    ));
+
+  const handlePageClick = ({ selected }) => {
+    setPageNumber(selected);
+  };
   return (
     <>
+      {modalShown && selectedCapsule && (
+        <div>
+          <CapsuleDetails
+            capsule={selectedCapsule}
+            onClose={() => setModalShown(false)}
+            onCapsuleClick={handleCapsuleClick}
+          />
+        </div>
+      )}
       <div className="mt-[4em] md:mt-10 text-white input-wrapper space-y-2 pl-12 pr-12 pt-6 py-12 flex">
         <div>
           <p className="hidden md:block font-medium text-4xl text-center w-md">
@@ -80,7 +155,7 @@ const InputField = () => {
               value={search}
               onChange={handleSearch}
             />
-            <div className=" bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full p-4 -mt-2 -ml-4 px-4 h-fit ">
+            <div className="hover:animate-spin hover:cursor-pointer bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full p-4 -mt-2 -ml-4 px-4 h-fit ">
               <AiOutlineSearch size={25} />
             </div>
           </div>
@@ -124,12 +199,13 @@ const InputField = () => {
                   {capsule.type}
                 </option>
               ))}
+              __
             </select>
           </div>
         </div>
       </div>
       <div className="pl-12 pt-2 pr-12">
-        <ul className="text-white">
+        {/* <ul className="text-white">
           {filteredCapsules.map((capsule) => (
             <li key={capsule.capsule_serial}>
               <h2>{capsule.capsule_serial}</h2>
@@ -138,9 +214,22 @@ const InputField = () => {
               <p>Type: {capsule.type}</p>
             </li>
           ))}
-        </ul>
-        {/* <CardContainer capsules={filteredCapsules} /> */}
+        </ul> */}
+        <CardContainer capsules={displayCapsules} />
         {/* <Capsules /> */}
+        <ReactPaginate
+          pageCount={pageCount}
+          pageRangeDisplayed={2}
+          onPageChange={handlePageClick}
+          marginPagesDisplayed={2}
+          containerClassName={"container"}
+          previousLinkClassName={"page"}
+          breakClassName={"page"}
+          nextLinkClassName={"page"}
+          pageClassName={"page"}
+          disabledClassNae={"disabled"}
+          activeClassName={"active"}
+        />
       </div>
     </>
   );
