@@ -16,7 +16,7 @@ You can check out a live preview of the website here: frontend-spacex.netlify.ap
 
 ### `Live Demo`
 
-frontend-spacex.netlify.app
+https://frontend-spacex.netlify.app/
 
 ### `Video Url`
 
