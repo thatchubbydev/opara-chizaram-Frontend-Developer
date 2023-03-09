@@ -10,7 +10,6 @@ const CardContainer = ({ capsules }) => {
   return (
     <>
       <div className="text-white flex flex-wrap gap-6 justify-center">
-        {/* card 1 */}
         {capsules}
       </div>
     </>

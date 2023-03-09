@@ -77,55 +77,68 @@ const InputField = () => {
 
   const displayCapsules = filteredCapsules
     .slice(pageNumber * capsulesPerPage, (pageNumber + 1) * capsulesPerPage)
-    .map((item) => (
-      <div
-        key={item?.capsule_id}
-        className="glass p-6 px-8 mt-12 space-y-4 rounded-[0.7rem] w-fit text-left drop-shadow-2xl border bg-[#2c124f] "
-      >
-        <div className="flex -mt-12 -ml-4">
-          <img src={card} alt="card header" width={50} />
-        </div>
-
-        <p className="text-2xl font-medium">
-          {/* <span className="text-blue-500 font-bold">Serial:</span>{" "} */}
-          {item?.capsule_serial}
-        </p>
-        <div className="border-b w-[20%]"></div>
-
-        <p className="text-sm">
-          Under the category{" "}
-          <span className="text-blue-500 font-bold">{item?.capsule_id}</span>{" "}
-        </p>
-        <p className="text-sm">
-          Having a status of
-          <span className="text-blue-500 font-bold"> {item?.status}</span>{" "}
-        </p>
-        <div
-          className="justify-center text-white  flex"
-          onClick={() => handleCapsuleClick(item)}
-        >
-          {/* left div */}
+    .map(
+      (item) =>
+        item && (
           <div
-            data-testid="explore-button"
-            className="hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-[#d0cdcc] justify-between text-sm border left-div px-6 py-2 my-4 flex w-fit "
+            key={item?.capsule_id}
+            className="glass p-6 px-8 mt-12 space-y-4 rounded-[0.7rem] w-fit text-left drop-shadow-2xl border bg-[#2c124f] "
           >
-            {" "}
-            <div>Explore</div>
-          </div>
-          {/* right div */}
-          <div className=" bg-purple-500 justify-between text-sm border right-div px-2 pt-3 py-2 my-4 flex w-fit ">
-            {" "}
-            <div>
-              <BiCaretRight />
+            <div className="flex -mt-12 -ml-4">
+              <img src={card} alt="card header" width={50} />
+            </div>
+
+            <p className="text-2xl font-medium">
+              {/* <span className="text-blue-500 font-bold">Serial:</span>{" "} */}
+              {item?.capsule_serial}
+            </p>
+            <div className="border-b w-[20%]"></div>
+
+            <p className="text-sm">
+              Under the category{" "}
+              <span className="text-blue-500 font-bold">
+                {item?.capsule_id}
+              </span>{" "}
+            </p>
+            <p className="text-sm">
+              Having a status of
+              <span className="text-blue-500 font-bold">
+                {" "}
+                {item?.status}
+              </span>{" "}
+            </p>
+            <div
+              className="justify-center text-white  flex"
+              onClick={() => handleCapsuleClick(item)}
+            >
+              {/* left div */}
+              <div
+                data-testid="explore-button"
+                className="hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-[#d0cdcc] justify-between text-sm border left-div px-6 py-2 my-4 flex w-fit "
+              >
+                {" "}
+                <div>Explore</div>
+              </div>
+              {/* right div */}
+              <div className=" bg-purple-500 justify-between text-sm border right-div px-2 pt-3 py-2 my-4 flex w-fit ">
+                {" "}
+                <div>
+                  <BiCaretRight />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    ));
+        )
+    );
 
   const handlePageClick = ({ selected }) => {
-    setPageNumber(selected);
+    if (selected === pageNumber - 1) {
+      setPageNumber(pageNumber - 1);
+    } else {
+      setPageNumber(selected);
+    }
   };
+
   return (
     <>
       {modalShown && selectedCapsule && (
@@ -145,7 +158,6 @@ const InputField = () => {
         </div>
 
         <div className="flex justify-center w-full flex-col ">
-          {/* textbox and button container */}
           <div className="flex w-full md:w-1/2 mx-auto">
             <input
               data-testid="search-input"
@@ -157,7 +169,7 @@ const InputField = () => {
               onChange={handleSearch}
             />
           </div>
-          {/* button container */}
+
           <div className="space-x-3 flex-col flex md:flex-row space-y-3 md:space-y-0 justify-start  mx-auto text-[#03020b]">
             <select
               id="status"
@@ -212,6 +224,7 @@ const InputField = () => {
             pageRangeDisplayed={2}
             onPageChange={handlePageClick}
             marginPagesDisplayed={2}
+            initialPage={pageNumber}
             containerClassName={"container"}
             previousLinkClassName={"page"}
             breakClassName={"page"}
