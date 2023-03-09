@@ -1,6 +1,6 @@
 # Technologies
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React JS and Tailwind CSS
 
 ## Project Description
 
@@ -20,5 +20,4 @@ frontend-spacex.netlify.app
 
 ### `Video Url`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+https://drive.google.com/file/d/1UFhbUO0rTzJaQdNbBqPVoazjNrJ0U8rj/view?usp=sharing
