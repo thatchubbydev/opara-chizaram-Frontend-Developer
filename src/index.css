@@ -138,6 +138,10 @@ body {
 .container{
   display: flex;
   list-style: none;
+  margin: auto;
+  justify-content: center;
+  margin-top: 1em;
+  color: whitesmoke;
 }
 
 .page{

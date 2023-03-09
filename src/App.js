@@ -3,7 +3,6 @@ import Banner from "./Components/Banner";
 import CardContainer from "./Components/CardContainer";
 import Navbar from "./Components/Navbar";
 import InputField from "./Components/InputField";
-import Capsules from "./Components/Capsules";
 
 const App = () => {
   return (
@@ -16,7 +15,6 @@ const App = () => {
       </div>
 
       <InputField />
-      {/* <Capsules /> */}
     </div>
   );
 };

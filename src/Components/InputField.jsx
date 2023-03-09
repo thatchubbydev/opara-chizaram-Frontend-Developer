@@ -3,11 +3,8 @@ import axios from "axios";
 import { AiOutlineSearch } from "react-icons/ai";
 import CardContainer from "./CardContainer";
 import card from "../assets/logo_2.png";
-import logo from "../assets/spacex_logo.png";
-import { BsArrowRight } from "react-icons/bs";
 import { BiCaretRight } from "react-icons/bi";
 import ReactPaginate from "react-paginate";
-import Capsules from "./Capsules";
 import CapsuleDetails from "./CapsuleDetails";
 
 const InputField = () => {
@@ -82,7 +79,7 @@ const InputField = () => {
     .slice(pageNumber * capsulesPerPage, (pageNumber + 1) * capsulesPerPage)
     .map((item) => (
       <div
-        key={capsules?.capsule_id}
+        key={item?.capsule_id}
         className="glass p-6 px-8 mt-12 space-y-4 rounded-[0.7rem] w-fit text-left drop-shadow-2xl border bg-[#2c124f] "
       >
         <div className="flex -mt-12 -ml-4">
@@ -108,7 +105,10 @@ const InputField = () => {
           onClick={() => handleCapsuleClick(item)}
         >
           {/* left div */}
-          <div className="hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-[#d0cdcc] justify-between text-sm border left-div px-6 py-2 my-4 flex w-fit ">
+          <div
+            data-testid="explore-button"
+            className="hover:bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-[#d0cdcc] justify-between text-sm border left-div px-6 py-2 my-4 flex w-fit "
+          >
             {" "}
             <div>Explore</div>
           </div>
@@ -129,7 +129,7 @@ const InputField = () => {
   return (
     <>
       {modalShown && selectedCapsule && (
-        <div>
+        <div data-testid="capsule-details-dialog">
           <CapsuleDetails
             capsule={selectedCapsule}
             onClose={() => setModalShown(false)}
@@ -148,21 +148,20 @@ const InputField = () => {
           {/* textbox and button container */}
           <div className="flex w-full md:w-1/2 mx-auto">
             <input
-              className=" w-full input-left-div rounded-md p-2 border-none text-black mb-6"
+              data-testid="search-input"
+              className=" w-full rounded-full p-2 pl-5 border-none text-black mb-6"
               placeholder="Search Capsules..."
               id="search"
               type="text"
               value={search}
               onChange={handleSearch}
             />
-            <div className="hover:animate-spin hover:cursor-pointer bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full p-4 -mt-2 -ml-4 px-4 h-fit ">
-              <AiOutlineSearch size={25} />
-            </div>
           </div>
           {/* button container */}
-          <div className="space-x-3 justify-center mx-auto text-[#03020b]">
+          <div className="space-x-3 flex-col flex md:flex-row space-y-3 md:space-y-0 justify-start  mx-auto text-[#03020b]">
             <select
               id="status"
+              data-testid="status-filter"
               value={statusFilter}
               onChange={handleStatusFilter}
               className="rounded-full p-2 px-4"
@@ -173,6 +172,7 @@ const InputField = () => {
             </select>
             <select
               id="launch"
+              data-testid="launch-filter"
               value={launchFilter}
               className="rounded-full p-2 px-4"
               onChange={handleLaunchFilter}
@@ -189,6 +189,7 @@ const InputField = () => {
             </select>
             <select
               id="type"
+              data-testid="type-filter"
               value={typeFilter}
               className="rounded-full p-2 px-4"
               onChange={handleTypeFilter}
@@ -199,37 +200,27 @@ const InputField = () => {
                   {capsule.type}
                 </option>
               ))}
-              __
             </select>
           </div>
         </div>
       </div>
       <div className="pl-12 pt-2 pr-12">
-        {/* <ul className="text-white">
-          {filteredCapsules.map((capsule) => (
-            <li key={capsule.capsule_serial}>
-              <h2>{capsule.capsule_serial}</h2>
-              <p>Status: {capsule.status}</p>
-              <p>Original launch: {capsule.original_launch}</p>
-              <p>Type: {capsule.type}</p>
-            </li>
-          ))}
-        </ul> */}
         <CardContainer capsules={displayCapsules} />
-        {/* <Capsules /> */}
-        <ReactPaginate
-          pageCount={pageCount}
-          pageRangeDisplayed={2}
-          onPageChange={handlePageClick}
-          marginPagesDisplayed={2}
-          containerClassName={"container"}
-          previousLinkClassName={"page"}
-          breakClassName={"page"}
-          nextLinkClassName={"page"}
-          pageClassName={"page"}
-          disabledClassNae={"disabled"}
-          activeClassName={"active"}
-        />
+        <div className="">
+          <ReactPaginate
+            pageCount={pageCount}
+            pageRangeDisplayed={2}
+            onPageChange={handlePageClick}
+            marginPagesDisplayed={2}
+            containerClassName={"container"}
+            previousLinkClassName={"page"}
+            breakClassName={"page"}
+            nextLinkClassName={"page"}
+            pageClassName={"page"}
+            disabledClassNae={"disabled"}
+            activeClassName={"active"}
+          />
+        </div>
       </div>
     </>
   );
